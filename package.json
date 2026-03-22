@@ -1,0 +1,38 @@
+{
+  "name": "product-key-generator",
+  "version": "2.0.0",
+  "description": "专业的产品密钥生成器，支持多种格式和云平台部署",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve .",
+    "deploy:cf": "wrangler deploy",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "product-key",
+    "key-generator",
+    "cloudflare",
+    "vercel",
+    "netlify",
+    "serverless"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/Product-key-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/Product-key-generator/issues"
+  },
+  "homepage": "https://github.com/yourusername/Product-key-generator#readme",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

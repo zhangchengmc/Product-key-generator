@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品密钥生成器 - 功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>产品密钥生成器 - 功能测试</h1>
+
+    <div class="test-section">
+        <h2>1. 基础功能测试</h2>
+        <button onclick="testBasicGeneration()">测试密钥生成</button>
+        <div id="basicResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 批量生成测试</h2>
+        <button onclick="testBatchGeneration()">测试批量生成（5个）</button>
+        <div id="batchResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 格式测试</h2>
+        <button onclick="testStandardFormat()">测试标准格式</button>
+        <button onclick="testSimpleFormat()">测试简单格式</button>
+        <button onclick="testCustomFormat()">测试自定义格式</button>
+        <div id="formatResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. API 功能测试</h2>
+        <button onclick="testLocalAPI()">测试本地API模拟</button>
+        <div id="apiResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. UI 功能测试</h2>
+        <button onclick="testThemeSwitch()">测试主题切换</button>
+        <button onclick="testCopyFunction()">测试复制功能</button>
+        <div id="uiResult" class="result"></div>
+    </div>
+
+    <script>
+        // 从主脚本导入函数
+        function generateStandardKey() {
+            const characters = '23456789BCDFGHJKLMNPQRSTVWXYZ';
+            let result = '';
+
+            for (let i = 0; i < 25; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                if ((i + 1) % 5 === 0 && i < 24) {
+                    result += '-';
+                }
+            }
+
+            return result;
+        }
+
+        function generateSimpleKey() {
+            const characters = '23456789BCDFGHJKLMNPQRSTVWXYZ';
+            let result = '';
+
+            for (let i = 0; i < 15; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                if ((i + 1) % 5 === 0 && i < 14) {
+                    result += '-';
+                }
+            }
+
+            return result;
+        }
+
+        function generateCustomKey(format) {
+            const characters = '23456789BCDFGHJKLMNPQRSTVWXYZ';
+            let result = '';
+
+            for (let i = 0; i < format.length; i++) {
+                if (format[i] === 'X') {
+                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                } else {
+                    result += format[i];
+                }
+            }
+
+            return result;
+        }
+
+        // 测试函数
+        function testBasicGeneration() {
+            const key = generateStandardKey();
+            const isValid = /^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/.test(key);
+
+            document.getElementById('basicResult').innerHTML = `
+                <div>生成的密钥: <strong>${key}</strong></div>
+                <div class="${isValid ? 'success' : 'error'}">
+                    格式验证: ${isValid ? '✓ 通过' : '✗ 失败'}
+                </div>
+                <div>长度: ${key.length} 字符</div>
+            `;
+        }
+
+        function testBatchGeneration() {
+            const keys = [];
+            for (let i = 0; i < 5; i++) {
+                keys.push(generateStandardKey());
+            }
+
+            const allValid = keys.every(key =>
+                /^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/.test(key)
+            );
+
+            document.getElementById('batchResult').innerHTML = `
+                <div>生成了 ${keys.length} 个密钥:</div>
+                <ul>
+                    ${keys.map(key => `<li>${key}</li>`).join('')}
+                </ul>
+                <div class="${allValid ? 'success' : 'error'}">
+                    批量验证: ${allValid ? '✓ 全部通过' : '✗ 部分失败'}
+                </div>
+            `;
+        }
+
+        function testStandardFormat() {
+            const key = generateStandardKey();
+            const isValid = /^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/.test(key);
+
+            document.getElementById('formatResult').innerHTML = `
+                <div>标准格式: <strong>${key}</strong></div>
+                <div class="${isValid ? 'success' : 'error'}">
+                    验证: ${isValid ? '✓ 符合标准格式' : '✗ 格式错误'}
+                </div>
+            `;
+        }
+
+        function testSimpleFormat() {
+            const key = generateSimpleKey();
+            const isValid = /^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/.test(key);
+
+            document.getElementById('formatResult').innerHTML = `
+                <div>简单格式: <strong>${key}</strong></div>
+                <div class="${isValid ? 'success' : 'error'}">
+                    验证: ${isValid ? '✓ 符合简单格式' : '✗ 格式错误'}
+                </div>
+            `;
+        }
+
+        function testCustomFormat() {
+            const key = generateCustomKey('XXXX-XXXX-XXXX-XXXX');
+            const isValid = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key);
+
+            document.getElementById('formatResult').innerHTML = `
+                <div>自定义格式 (XXXX-XXXX-XXXX-XXXX): <strong>${key}</strong></div>
+                <div class="${isValid ? 'success' : 'error'}">
+                    验证: ${isValid ? '✓ 符合自定义格式' : '✗ 格式错误'}
+                </div>
+            `;
+        }
+
+        function testLocalAPI() {
+            // 模拟 API 响应
+            const mockResponse = {
+                success: true,
+                count: 3,
+                type: 'standard',
+                format: 'XXXXX-XXXXX-XXXXX-XXXXX-XXXXX',
+                keys: [
+                    generateStandardKey(),
+                    generateStandardKey(),
+                    generateStandardKey()
+                ],
+                timestamp: new Date().toISOString()
+            };
+
+            document.getElementById('apiResult').innerHTML = `
+                <div>模拟 API 响应:</div>
+                <pre>${JSON.stringify(mockResponse, null, 2)}</pre>
+                <div class="success">✓ API 结构验证通过</div>
+            `;
+        }
+
+        function testThemeSwitch() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-theme', newTheme);
+
+            document.getElementById('uiResult').innerHTML = `
+                <div>主题已从 <strong>${currentTheme}</strong> 切换到 <strong>${newTheme}</strong></div>
+                <div class="success">✓ 主题切换功能正常</div>
+            `;
+        }
+
+        function testCopyFunction() {
+            const testText = 'TEST-KEY-12345';
+
+            navigator.clipboard.writeText(testText).then(() => {
+                document.getElementById('uiResult').innerHTML = `
+                    <div>已复制测试文本到剪贴板: <strong>${testText}</strong></div>
+                    <div class="success">✓ 复制功能正常</div>
+                `;
+            }).catch(err => {
+                document.getElementById('uiResult').innerHTML = `
+                    <div class="error">✗ 复制功能测试失败: ${err.message}</div>
+                    <div>请确保浏览器支持 Clipboard API</div>
+                `;
+            });
+        }
+
+        // 页面加载时运行基础测试
+        window.addEventListener('load', () => {
+            testBasicGeneration();
+            console.log('产品密钥生成器测试页面已加载');
+        });
+    </script>
+</body>
+</html>

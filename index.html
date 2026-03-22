@@ -6,18 +6,192 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <script src="script.js"></script>
-  <title>深色模式示例</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>产品密钥生成器 - 专业工具</title>
+  <meta name="description" content="在线产品密钥生成器，支持多种格式，可一键部署到Cloudflare Workers">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔑</text></svg>">
 </head>
 
-<body class="dark-mode">
-  <h1>深色模式示例</h1>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <i class="fas fa-key"></i>
+        <h1>产品密钥生成器</h1>
+      </div>
+      <p class="subtitle">专业、安全、可定制的产品密钥生成工具</p>
+    </header>
 
-  <button onclick="generateRandomString()">生成随机字符串</button>
+    <main class="main-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-cogs"></i> 生成设置</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="keyType"><i class="fas fa-list"></i> 密钥类型</label>
+            <select id="keyType" class="form-control">
+              <option value="standard">标准格式 (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)</option>
+              <option value="microsoft">Microsoft 格式 (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)</option>
+              <option value="simple">简单格式 (XXXXX-XXXXX-XXXXX)</option>
+              <option value="custom">自定义格式</option>
+            </select>
+          </div>
 
-  <p id="randomString"></p>
+          <div class="form-group" id="customFormatGroup" style="display: none;">
+            <label for="customFormat"><i class="fas fa-edit"></i> 自定义格式</label>
+            <input type="text" id="customFormat" class="form-control" placeholder="例如: XXXX-XXXX-XXXX-XXXX" value="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX">
+            <small class="form-text">使用 X 表示字符，- 表示分隔符</small>
+          </div>
 
-  <button id="copyButton" onclick="copyToClipboard()">复制到剪贴板</button>
+          <div class="form-group">
+            <label for="keyCount"><i class="fas fa-hashtag"></i> 生成数量</label>
+            <input type="number" id="keyCount" class="form-control" min="1" max="100" value="1">
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-palette"></i> 主题模式</label>
+            <div class="theme-switch">
+              <button class="theme-btn active" data-theme="dark">
+                <i class="fas fa-moon"></i> 深色
+              </button>
+              <button class="theme-btn" data-theme="light">
+                <i class="fas fa-sun"></i> 浅色
+              </button>
+              <button class="theme-btn" data-theme="auto">
+                <i class="fas fa-adjust"></i> 自动
+              </button>
+            </div>
+          </div>
+
+          <button id="generateBtn" class="btn btn-primary">
+            <i class="fas fa-bolt"></i> 生成密钥
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-key"></i> 生成的密钥</h2>
+          <div class="actions">
+            <button id="copyAllBtn" class="btn btn-secondary btn-sm">
+              <i class="fas fa-copy"></i> 复制全部
+            </button>
+            <button id="clearBtn" class="btn btn-secondary btn-sm">
+              <i class="fas fa-trash"></i> 清空
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="keysContainer" class="keys-container">
+            <div class="empty-state">
+              <i class="fas fa-key"></i>
+              <p>点击"生成密钥"按钮开始生成产品密钥</p>
+            </div>
+          </div>
+          <div class="stats">
+            <span><i class="fas fa-key"></i> 已生成: <span id="totalKeys">0</span></span>
+            <span><i class="fas fa-clipboard-check"></i> 已复制: <span id="copiedKeys">0</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-cloud-upload-alt"></i> 一键部署</h2>
+        </div>
+        <div class="card-body">
+          <p>将此应用部署为无服务器函数，支持 Cloudflare Workers、Vercel 等平台。</p>
+
+          <div class="deploy-options">
+            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/Product-key-generator"
+               class="deploy-btn" target="_blank" rel="noopener">
+              <img src="https://workers.cloudflare.com/resources/logo/logo.svg" alt="Cloudflare">
+              <span>部署到 Cloudflare Workers</span>
+            </a>
+
+            <a href="https://vercel.com/new/clone?repository-url=https://github.com/yourusername/Product-key-generator"
+               class="deploy-btn" target="_blank" rel="noopener">
+              <img src="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png" alt="Vercel">
+              <span>部署到 Vercel</span>
+            </a>
+
+            <a href="https://app.netlify.com/start/deploy?repository=https://github.com/yourusername/Product-key-generator"
+               class="deploy-btn" target="_blank" rel="noopener">
+              <img src="https://www.netlify.com/img/global/favicon/favicon-32x32.png" alt="Netlify">
+              <span>部署到 Netlify</span>
+            </a>
+          </div>
+
+          <div class="api-info">
+            <h3><i class="fas fa-code"></i> API 端点</h3>
+            <p>部署后可通过以下 API 生成密钥：</p>
+            <code class="api-url">GET /api/generate?count=1&type=standard</code>
+            <code class="api-url">POST /api/generate { "count": 1, "type": "standard" }</code>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="disclaimer">
+          <p><i class="fas fa-exclamation-triangle"></i> <strong>免责声明：</strong>本工具仅为学习测试使用，请支持购买正版软件！</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/yourusername/Product-key-generator" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <a href="#" id="reportIssue">
+            <i class="fas fa-bug"></i> 报告问题
+          </a>
+          <a href="#" id="toggleInstructions">
+            <i class="fas fa-question-circle"></i> 使用说明
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 说明模态框 -->
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-question-circle"></i> 使用说明</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3><i class="fas fa-key"></i> 如何生成密钥</h3>
+        <ol>
+          <li>选择密钥类型（标准、Microsoft、简单或自定义格式）</li>
+          <li>设置生成数量（1-100个）</li>
+          <li>点击"生成密钥"按钮</li>
+          <li>点击单个密钥或使用"复制全部"按钮复制</li>
+        </ol>
+
+        <h3><i class="fas fa-cloud"></i> 如何部署</h3>
+        <ol>
+          <li>点击上方的一键部署按钮</li>
+          <li>登录您的 Cloudflare/Vercel/Netlify 账户</li>
+          <li>按照提示完成部署</li>
+          <li>部署后即可通过 API 调用生成密钥</li>
+        </ol>
+
+        <h3><i class="fas fa-code"></i> API 使用</h3>
+        <pre><code>// GET 请求
+fetch('/api/generate?count=5&type=microsoft')
+  .then(res => res.json())
+  .then(keys => console.log(keys))
+
+// POST 请求
+fetch('/api/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ count: 3, type: 'standard' })
+})</code></pre>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
